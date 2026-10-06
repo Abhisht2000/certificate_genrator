@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CertifyPro — Bulk Certificate Generator</title>
+  <meta name="description" content="Generate beautiful certificates in bulk from Excel or CSV files. Upload your template, map fields, and download all certificates instantly." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400..900&family=Cormorant+Garamond:ital,wght@0,400..700;1,400..700&family=Dancing+Script:wght@400..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Great+Vibes&family=Inter:wght@300..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,300..900;1,300..900&family=Oswald:wght@400..700&family=Outfit:wght@400..900&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,300..900;1,300..900&family=Roboto:ital,wght@0,400..900;1,400..900&family=Sacramento&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <rect width="28" height="28" rx="8" fill="url(#logoGrad)"/>
+              <path d="M7 14l4 4 10-10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+            </svg>
+          </div>
+          <span class="logo-text">CertifyPro</span>
+        </div>
+        <span class="badge-version">v2.0</span>
+      </div>
+      <div class="developer-tag">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+        <span>Developer: <strong class="dev-highlight">ABHISHT SINGH</strong></span>
+      </div>
+    </div>
+  </header>
+  <main class="main">
+    <div class="steps-bar">
+      <div class="step active" id="step-indicator-1"><div class="step-num">1</div><div class="step-label">Template</div></div>
+      <div class="step-connector"></div>
+      <div class="step" id="step-indicator-2"><div class="step-num">2</div><div class="step-label">Data</div></div>
+      <div class="step-connector"></div>
+      <div class="step" id="step-indicator-3"><div class="step-num">3</div><div class="step-label">Fields</div></div>
+      <div class="step-connector"></div>
+      <div class="step" id="step-indicator-4"><div class="step-num">4</div><div class="step-label">Generate</div></div>
+    </div>
+    <section class="step-section active" id="section-1">
+      <div class="section-header">
+        <h2>Upload Your Certificate Template</h2>
+        <p>Upload a PNG or JPG image as your template. Use placeholder text like <code>{{Name}}</code> in the image, or add text fields visually below.</p>
+      </div>
+      <div class="upload-area" id="template-drop-zone">
+        <input type="file" id="template-file" accept=".png,.jpg,.jpeg" hidden />
+        <div class="upload-icon">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <rect width="48" height="48" rx="14" fill="url(#uploadGrad1)"/>
+            <path d="M16 28l8-8 8 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M24 20v12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M14 34h20" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+            <defs><linearGradient id="uploadGrad1" x1="0" y1="0" x2="48" y2="48"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+          </svg>
+        </div>
+        <h3>Drag &amp; Drop your template here</h3>
+        <p class="upload-hint">or <button class="link-btn" onclick="document.getElementById('template-file').click()">browse to upload</button></p>
+        <p class="upload-formats">Supports PNG, JPG</p>
+      </div>
+      <div class="template-preview-wrap hidden" id="template-preview-wrap">
+        <div class="preview-header">
+          <h3>Template Preview</h3>
+          <button class="btn-ghost" id="change-template-btn">Change Template</button>
+        </div>
+        <div class="canvas-container" id="canvas-container">
+          <canvas id="template-canvas"></canvas>
+          <div id="fields-overlay"></div>
+        </div>
+      </div>
+      <div class="step-nav">
+        <div></div>
+        <button class="btn-primary" id="step1-next" disabled>
+          Next: Upload Data
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </section>
+    <section class="step-section" id="section-2">
+      <div class="section-header">
+        <h2>Upload Student Data</h2>
+        <p>Upload an Excel (.xlsx) or CSV file. The first row should be column headers (e.g. Name, Course, Date).</p>
+      </div>
+      <div class="upload-area" id="data-drop-zone">
+        <input type="file" id="data-file" accept=".csv,.xlsx,.xls" hidden />
+        <div class="upload-icon">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <rect width="48" height="48" rx="14" fill="url(#uploadGrad2)"/>
+            <rect x="12" y="10" width="24" height="28" rx="4" stroke="white" stroke-width="2" fill="none"/>
+            <path d="M17 18h14M17 23h14M17 28h8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <defs><linearGradient id="uploadGrad2" x1="0" y1="0" x2="48" y2="48"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#059669"/></linearGradient></defs>
+          </svg>
+        </div>
+        <h3>Drag &amp; Drop your Excel/CSV file</h3>
+        <p class="upload-hint">or <button class="link-btn" onclick="document.getElementById('data-file').click()">browse to upload</button></p>
+        <p class="upload-formats">Supports XLSX, XLS, CSV</p>
+      </div>
+      <div class="data-preview-wrap hidden" id="data-preview-wrap">
+        <div class="preview-header">
+          <h3>Data Preview <span class="row-count" id="row-count-label"></span></h3>
+          <button class="btn-ghost" id="change-data-btn">Change File</button>
+        </div>
+        <div class="table-scroll"><table class="data-table" id="data-table"></table></div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-ghost" id="step2-back">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Back
+        </button>
+        <button class="btn-primary" id="step2-next" disabled>
+          Next: Map Fields
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </section>
+    <section class="step-section" id="section-3">
+      <div class="section-header">
+        <h2>Map &amp; Style Your Fields</h2>
+        <p>Add text fields, bind them to CSV columns, and drag to position them on the template. Click a field to edit styling.</p>
+      </div>
+      <div class="mapping-layout">
+        <div class="fields-panel">
+          <div class="panel-title">Text Fields</div>
+          <div id="field-list"></div>
+          <button class="btn-add-field" id="add-field-btn-2">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Add Field
+          </button>
+          <div class="panel-divider"></div>
+          <div class="panel-title">Output Format</div>
+          <div class="format-options">
+            <label class="format-option">
+              <input type="radio" name="outputFormat" value="pdf" id="format-pdf" />
+              <div class="format-card">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="2"/><path d="M14 2v6h6" stroke="currentColor" stroke-width="2"/></svg>
+                <span>PDF</span>
+              </div>
+            </label>
+            <label class="format-option">
+              <input type="radio" name="outputFormat" value="png" id="format-png" />
+              <div class="format-card">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2"/><path d="M3 15l5-5 4 4 3-3 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>PNG</span>
+              </div>
+            </label>
+            <label class="format-option">
+              <input type="radio" name="outputFormat" value="both" id="format-both" checked />
+              <div class="format-card">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="2"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2"/></svg>
+                <span>Both</span>
+              </div>
+            </label>
+          </div>
+          <div class="panel-title" style="margin-top:16px">Archive Name</div>
+          <input type="text" id="zip-name" class="text-input" value="certificates" placeholder="certificates" />
+        </div>
+        <div class="canvas-panel">
+          <div class="canvas-wrapper" id="canvas-wrapper">
+            <canvas id="main-canvas"></canvas>
+            <div id="drag-fields-layer"></div>
+          </div>
+          <p class="canvas-hint">Click a field to select &bull; Drag to reposition</p>
+        </div>
+      </div>
+      <div class="field-editor hidden" id="field-editor">
+        <div class="editor-header">
+          <span>Edit Field</span>
+          <button class="editor-close" id="editor-close">&#10005;</button>
+        </div>
+        <div class="editor-row">
+          <label>Bind to Column</label>
+          <select id="field-column" class="select-input"></select>
+        </div>
+        <div class="editor-row">
+          <label>Fallback Text</label>
+          <input type="text" id="field-label" class="text-input" placeholder="e.g. Student Name" />
+        </div>
+        <div class="editor-row">
+          <label>Font Size</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="range" id="field-size-range" min="8" max="150" value="36" style="flex:1;accent-color:#6366f1;" />
+            <input type="number" id="field-size" class="text-input" value="36" min="8" max="200" style="width:60px;flex-shrink:0" />
+          </div>
+        </div>
+        <div class="editor-row">
+          <label>Font Family</label>
+          <select id="field-font" class="select-input">
+            <optgroup label="✒️ Calligraphy & Script">
+              <option value="'Great Vibes', cursive">Great Vibes (Classic Cursive)</option>
+              <option value="'Dancing Script', cursive">Dancing Script</option>
+              <option value="'Alex Brush', cursive">Alex Brush (Formal Signature)</option>
+              <option value="'Pinyon Script', cursive">Pinyon Script (Luxury Script)</option>
+              <option value="'Sacramento', cursive">Sacramento</option>
+              <option value="'Cinzel Decorative', serif">Cinzel Decorative</option>
+            </optgroup>
+            <optgroup label="👑 Formal & Luxury Serif">
+              <option value="'Georgia', serif" selected>Georgia (Classic Serif)</option>
+              <option value="'Cinzel', serif">Cinzel (Royal Roman)</option>
+              <option value="'Playfair Display', serif">Playfair Display</option>
+              <option value="'Bodoni Moda', serif">Bodoni Moda</option>
+              <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+              <option value="'EB Garamond', serif">EB Garamond</option>
+              <option value="'Lora', serif">Lora</option>
+              <option value="'Times New Roman', serif">Times New Roman</option>
+              <option value="'Palatino Linotype', serif">Palatino</option>
+            </optgroup>
+            <optgroup label="✨ Modern & Clean Sans-Serif">
+              <option value="'Montserrat', sans-serif">Montserrat</option>
+              <option value="'Outfit', sans-serif">Outfit</option>
+              <option value="'Poppins', sans-serif">Poppins</option>
+              <option value="'Inter', sans-serif">Inter</option>
+              <option value="'Roboto', sans-serif">Roboto</option>
+              <option value="'Oswald', sans-serif">Oswald</option>
+              <option value="'Arial', sans-serif">Arial</option>
+              <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+              <option value="'Impact', sans-serif">Impact</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="editor-row">
+          <label>Font Weight</label>
+          <select id="field-weight" class="select-input">
+            <option value="normal">Normal</option>
+            <option value="bold" selected>Bold</option>
+          </select>
+        </div>
+        <div class="editor-row">
+          <label>Color</label>
+          <input type="color" id="field-color" value="#1a2b5a" class="color-input" />
+        </div>
+        <div class="editor-row">
+          <label>Background Patch (Erase {{Name}})</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="field-mask" class="select-input" style="flex:1">
+              <option value="auto" selected>Auto-Match Background (Cover {{Name}})</option>
+              <option value="white">White Box</option>
+              <option value="custom">Custom Color Box</option>
+              <option value="none">None (Transparent)</option>
+            </select>
+            <input type="color" id="field-mask-color" value="#ffffff" class="color-input hidden" style="width:36px;height:36px;padding:2px" />
+          </div>
+        </div>
+        <div class="editor-row" id="mask-width-row">
+          <label>Patch Box Width</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="range" id="field-mask-width-range" min="10" max="80" value="35" style="flex:1;accent-color:#6366f1;" />
+            <span id="mask-width-val" style="font-size:12px;color:var(--text-muted);width:36px">35%</span>
+          </div>
+        </div>
+        <div class="editor-row">
+          <label>Alignment</label>
+          <div class="align-group">
+            <button class="align-btn active" data-align="left" id="align-left">L</button>
+            <button class="align-btn" data-align="center" id="align-center">C</button>
+            <button class="align-btn" data-align="right" id="align-right">R</button>
+          </div>
+        </div>
+        <button class="btn-danger" id="delete-field-btn">Delete Field</button>
+      </div>
+      <div class="step-nav">
+        <button class="btn-ghost" id="step3-back">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Back
+        </button>
+        <button class="btn-primary" id="step3-next">
+          Generate Certificates
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </section>
+    <section class="step-section" id="section-4">
+      <div class="section-header">
+        <h2>Generating Certificates</h2>
+        <p id="gen-subtitle">Please wait while we create your certificates...</p>
+      </div>
+      <div class="progress-section">
+        <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+        <div class="progress-stats">
+          <div class="progress-label" id="progress-label">0 / 0</div>
+          <button class="btn-stop hidden" id="stop-gen-btn">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="3" y="3" width="8" height="8" rx="1.5" fill="currentColor"/></svg>
+            Stop Generation
+          </button>
+        </div>
+      </div>
+      <div class="preview-grid" id="preview-grid"></div>
+      <div class="download-section hidden" id="download-section">
+        <div class="download-icon">
+          <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <circle cx="30" cy="30" r="30" fill="url(#dlGrad)"/>
+            <path d="M30 20v16M23 30l7 7 7-7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20 44h20" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+            <defs><linearGradient id="dlGrad" x1="0" y1="0" x2="60" y2="60"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+          </svg>
+        </div>
+        <h3 id="download-title">All Certificates Ready!</h3>
+        <p id="download-desc"></p>
+        <div class="download-btn-group">
+          <button class="btn-primary btn-large" id="download-zip-btn">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v9M5 9l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 14h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Download ZIP Archive
+          </button>
+          <button class="btn-ghost btn-large" id="restart-btn">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9a6 6 0 1 1 2 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 13.5V9H7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Start Over
+          </button>
+        </div>
+      </div>
+      <div class="step-nav" id="gen-back-nav">
+        <button class="btn-ghost" id="step4-back">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Back
+        </button>
+        <div></div>
+      </div>
+    </section>
+  </main>
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-title">CertifyPro</span>
+        <span class="footer-copy">&copy; 2026 ABHISHT SINGH. All Rights Reserved.</span>
+      </div>
+      <div class="footer-credits">
+        <span>Designed & Developed with ❤️ by <strong class="dev-highlight">ABHISHT SINGH</strong></span>
+      </div>
+    </div>
+  </footer>
+  <div class="toast" id="toast"></div>
+  <canvas id="gen-canvas" style="display:none"></canvas>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
